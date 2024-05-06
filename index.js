@@ -7,74 +7,74 @@ app.use(express.json())
 const pool = new Pool({
     user:"postgres",
     host: "localhost",
-    database: "postgres",
+    database: "gatoxdog",
     password: "ds564",
     port: 7007
 });
 
 //GET
-app.get ('/gatos', async (req, res) => {
+app.get ('/pets', async (req, res) => {
     try {
-const resultado = await pool.query('SELECT * FROM gatos');
+const resultado = await pool.query('SELECT * FROM pets');
 res.json({
     total: resultado.rowCount,
     usuarios: resultado.rows}
 );
 
     }catch (error) {
-        console.log("Erro ao obter todos os usuarios");
-        res.status(500).send({
-            mensagem: "Erro ao obter todos os usuarios"
+        console.log("Erro ao obter todos os pets", error);
+        res.status(400).send({
+            mensagem: "Erro ao obter todos os pets" 
         })
 }});
 
 
 //POST
-app.post('/gatos', async (req, res) =>{
+app.post('/pets', async (req, res) =>{
     try{
-        const {nomeG, fofuraG, hpG, nivelG} = req.body;
+        const {nome,gato_dog, fofura, hp, nivel} = req.body;
       
 
-        await pool.query('INSERT INTO usuarios (nomeG, fofuraG, hpG, nivelG) VALUES ($1, $2, $3, $4)', [nomeG, fofuraG, hpG, nivelG]);
+        await pool.query('INSERT INTO pets (nome,gato_dog, fofura, hp, nivel) VALUES ($1, $2, $3, $4, $5)', [nome,gato_dog, fofura, hp, nivel]);
         res.status(201).send({
-            mensagem: "Gato nascido com sucesso"
+            mensagem: "pet nascido com sucesso"
         })
     }
     catch (error) {
         console.log("não nasceu f", error);
-        res.status(500).send({
+        res.status(400).send({
             mensagem: "não nasceu f",
         })
 }})
 
 //DELETE
-app.delete('/gatos/:id', async (req, res) =>{
+app.delete('/pets/:id', async (req, res) =>{
     try{
 const {id} = req.params;
 
-await pool.query('DELETE FROM gatos WHERE id = $1', [id])
-        res.status(201).send({mensagem: "Gato deletado." })
+await pool.query('DELETE FROM pets WHERE id = $1', [id])
+        res.status(201).send({mensagem: "pet deletado." })
 
     }catch(error){
-        console.log("Erro ao deletar gato");
-        res.status(500).send({
-            mensagem: "Erro ao deletar gato"
+        console.log("Erro ao deletar pet");
+        res.status(400).send({
+            mensagem: "Erro ao deletar pet"
         })
     }
 })
 
 //UPDATE
-app.put('/gatos/:id', async (req, res) =>{
+app.put('/pets/:id', async (req, res) =>{
     try{
 const {id} = req.params;
-const {nomeG, fofuraG, hpG, nivelG} = req.body;
-await pool.query('UPDATE gatos SET nomeG = $1, fofuraG =$2, hpG = $3,nivelG = $4, WHERE id = $5',  [nomeG, fofuraG, hpG, nivelG, id]);
-        res.status(200).send({mensagem: "Gato adaptado" })
+const {nome,gato_dog, fofura, hp, nivel} = req.body;
+await pool.query('UPDATE pets SET nome = $1, gato_dog=$2, fofura = $3,hp = $4,nivel = $5 WHERE id = $6',  [nome,gato_dog, fofura, hp, nivel, id]);
+        res.status(200).send({mensagem: "pet adaptado" })
 
     }catch(error){
-        console.log("Erro ao adaptar gato", error);
+        console.log("Erro ao adaptar pet", error);
         res.status(500).send({
-            mensagem: "Erro ao adaptar gato",
+            mensagem: "Erro ao adaptar pet",
         })
     }
 })

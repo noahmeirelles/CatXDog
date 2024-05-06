@@ -1,23 +1,16 @@
-CREATE DATABASE aulabacktds2;
+CREATE DATABASE gatoxdog;
 
-CREATE TABLE gatos(
+CREATE TABLE pets(
     id SERIAL PRIMARY KEY,
-    nomeG VARCHAR(100) NOT NULL,
-    fofuraG VARCHAR(100) NOT NULL,
-    hpG VARCHAR(100) NOT NULL,
-    nivelG VARCHAR(100) NOT NULL
+    nome VARCHAR(100) NOT NULL,
+    gato_dog VARCHAR(100) NOT NULL,
+    fofura INT NOT NULL,
+    hp INT NOT NULL,
+    nivel INT NOT NULL
 );
-
-CREATE TABLE cachorros(
-    id SERIAL PRIMARY KEY,
-    nomeC VARCHAR(100) NOT NULL,
-    fofuraC VARCHAR(100) NOT NULL,
-    hpC VARCHAR(100) NOT NULL,
-    nivelC VARCHAR(100) NOT NULL
-    );
     
 CREATE TABLE fight(
     id SERIAL PRIMARY KEY,
     );
 
-INSERT INTO usuarios (nome,sobrenome, datadenascimento, email, idade, signo) VALUES ('noah', 'Meirelles','20-02-2007', 'noah@gmail.com',17, 'peixes');
+INSERT INTO pets (nome,gato_dog, fofura, hp, nivel) VALUES ('Coisinho','gato', 10, 17, 3);
