@@ -81,13 +81,64 @@ await pool.query('UPDATE pets SET nome = $1, gato_dog=$2, fofura = $3,hp = $4,ni
 
 
 
+//GET ID
+app.get('/pets/:id', async (req, res) => {
+    try {
+        const { id } = req.params;  
+        const select = await pool.query('SELECT * FROM pets WHERE id = $1', [id]);
+        if (!select) {
+            res.status(400).json({ mensagem: 'pet não encontrado!' });
+        } else {
+            res.json({
+                mensagem: 'pet encontrado',
+                pet: select.rows
+            });
+        }
+    } catch (error) {
+        res.status(500).json({ mensagem:"não deu" });
+    }
+});
+//VENCEDOR
+app.post('/fight/:gato/:dog', async (req, res) => {
+    try {
+        const { gato, dog } = req.params;
+        const vencedorGC = await vencedor(gato, dog);
+       
+        const resposta = await pool.query('INSERT INTO fight (gato, dog, vencedor) VALUES ($1, $2, $3)', [gato, dog, vencedorGC.id]);
+        res.status(200).json({
+            mensagem: "Este é o vencedor:",
+            vencedor: vencedorGC,
+        });
+    } catch (error) {
+        res.status(400).json({ mensagem: "Não deu..."});
+        console.log( error);
+    }
+});
+//LUTA
+async function vencedor(gatoF, dogF) {
+    const gat = await pool.query('SELECT * FROM pets WHERE id = $1', [gatoF]);
+    const doo = await pool.query('SELECT * FROM pets WHERE id = $1', [dogF]);
+    let somaG = gat.rows[0].fofura + gat.rows[0].hp; 
+    let somaC = doo.rows[0].fofura + doo.rows[0].hp; 
 
+    if (somaG > somaC) {
+        return gat.rows[0];
+    } else {
+        return doo.rows[0]; 
+    }
+}
+//HISTÓRICO
 
-
-//rota teste
-app.get('/', (req,res)=> {
-    res.send('Servidor funcionando')
+app.get('/fight', async (req, res) => {
+const historico = await pool.query('SELECT * FROM fight');
+    res.status(200).json({
+        total: historico.rowCount,
+        historico: historico.rows
+    });
 })
+
+
+
 
 
 
@@ -96,5 +147,5 @@ app.get('/', (req,res)=> {
 
  //ulrtima coisa
 app.listen(port, () =>{
-    console.log('servidor rodando na porta ${port}')
+    console.log('servidor rodando')
 })
