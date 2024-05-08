@@ -8,7 +8,7 @@ CREATE TABLE pets(
     hp INT NOT NULL,
     nivel INT NOT NULL
 );
-    
+
 CREATE TABLE fight(
     id SERIAL PRIMARY KEY,
     gato INT NOT NULL,
